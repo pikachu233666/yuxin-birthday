@@ -292,7 +292,6 @@ function WishJar({ selectedWish, onOpen }: { selectedWish: string; onOpen: () =>
         <span className="text-sm uppercase tracking-[0.25em]">Wish Jar</span>
       </div>
       <h3 className="mt-4 text-xl font-black text-white sm:text-2xl">星星心愿瓶</h3>
-      <div className="mt-2 text-sm text-pink-100/80">用来抽取不同生日祝福，第一颗星就是 Happy Birthday 煜心 💖</div>
       <motion.div
         key={selectedWish}
         initial={{ opacity: 0, y: 12 }}
