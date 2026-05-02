@@ -57,17 +57,17 @@ const confettiData = Array.from({ length: 54 }, (_, i) => ({
   size: 8 + (i % 10),
 }));
 
-function isBirthdayToday(now) {
+function isBirthdayToday(now: Date) {
   return now.getMonth() === 4 && now.getDate() === 3;
 }
 
-function getNextBirthday(now) {
+function getNextBirthday(now: Date) {
   const next = new Date(now.getFullYear(), 4, 3, 0, 0, 0);
   if (next.getTime() < now.getTime()) next.setFullYear(next.getFullYear() + 1);
   return next;
 }
 
-function getCountdown(now) {
+function getCountdown(now: Date) {
   const next = getNextBirthday(now);
   const diff = Math.max(0, next.getTime() - now.getTime());
   const days = Math.floor(diff / 86400000);
@@ -77,7 +77,7 @@ function getCountdown(now) {
   return { days, hours, minutes, seconds };
 }
 
-function Icon({ type, className = "" }) {
+function Icon({ type, className = "" }: { type: "heart" | "sparkle" | "gift" | "cake" | "stars" | "party" | "moon" | "letter" | "clock" | "jar"; className?: string }) {
   const label = {
     heart: "♡",
     sparkle: "✦",
@@ -94,7 +94,7 @@ function Icon({ type, className = "" }) {
   return <span className={`inline-flex items-center justify-center leading-none ${className}`}>{label}</span>;
 }
 
-function PrimaryButton({ children, onClick }) {
+function PrimaryButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
   return (
     <button
       type="button"
@@ -183,7 +183,7 @@ function TwinkleStars() {
   );
 }
 
-function ConfettiBurst({ active }) {
+function ConfettiBurst({ active }: { active: boolean }) {
   return (
     <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center">
       {active &&
@@ -205,7 +205,7 @@ function ConfettiBurst({ active }) {
   );
 }
 
-function ClickSurprise({ active }) {
+function ClickSurprise({ active }: { active: boolean }) {
   return (
     <div className="pointer-events-none fixed inset-0 z-[65] flex items-center justify-center">
       {active && (
@@ -222,7 +222,7 @@ function ClickSurprise({ active }) {
   );
 }
 
-function StatCard({ label, value, icon }) {
+function StatCard({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
   return (
     <motion.div
       className="rounded-2xl border border-white/15 bg-white/10 p-4 text-center shadow-[0_0_35px_rgba(244,114,182,0.18)] backdrop-blur-xl sm:rounded-3xl sm:p-5"
@@ -235,7 +235,7 @@ function StatCard({ label, value, icon }) {
   );
 }
 
-function CountdownPanel({ now }) {
+function CountdownPanel({ now }: { now: Date }) {
   const c = getCountdown(now);
   const items = [
     ["Days", c.days],
@@ -272,7 +272,7 @@ function CountdownPanel({ now }) {
   );
 }
 
-function BirthdayLetterButtonPanel({ onOpen }) {
+function BirthdayLetterButtonPanel({ onOpen }: { onOpen: () => void }) {
   return (
     <section className="mt-6 rounded-[1.5rem] border border-white/15 bg-white/10 p-6 text-center shadow-[0_0_55px_rgba(236,72,153,0.25)] backdrop-blur-xl sm:rounded-[2rem] sm:p-8">
       <div className="text-lg font-semibold text-pink-100 sm:text-xl">今天就是煜心的生日啦 ✨</div>
@@ -284,7 +284,7 @@ function BirthdayLetterButtonPanel({ onOpen }) {
   );
 }
 
-function WishJar({ selectedWish, onOpen }) {
+function WishJar({ selectedWish, onOpen }: { selectedWish: string; onOpen: () => void }) {
   return (
     <section className="rounded-[1.5rem] border border-white/15 bg-white/10 p-4 shadow-[0_0_55px_rgba(168,85,247,0.18)] backdrop-blur-xl sm:rounded-[2rem] sm:p-6">
       <div className="flex items-center gap-3 text-pink-100">
@@ -292,6 +292,7 @@ function WishJar({ selectedWish, onOpen }) {
         <span className="text-sm uppercase tracking-[0.25em]">Wish Jar</span>
       </div>
       <h3 className="mt-4 text-xl font-black text-white sm:text-2xl">星星心愿瓶</h3>
+      <div className="mt-2 text-sm text-pink-100/80">用来抽取不同生日祝福，第一颗星就是 Happy Birthday 煜心 💖</div>
       <motion.div
         key={selectedWish}
         initial={{ opacity: 0, y: 12 }}
@@ -337,7 +338,7 @@ function TimelinePanel() {
   );
 }
 
-function LetterModal({ open, onClose }) {
+function LetterModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/70 p-5 backdrop-blur-md">
@@ -372,12 +373,12 @@ function LetterModal({ open, onClose }) {
 
 export default function YuxinBirthdayCelebration() {
   const [burst, setBurst] = useState(false);
-  const [now, setNow] = useState(null);
+  const [now, setNow] = useState<Date | null>(null);
   const [selectedWishIndex, setSelectedWishIndex] = useState(5);
   const [letterOpen, setLetterOpen] = useState(false);
   const [surpriseActive, setSurpriseActive] = useState(false);
-  const burstTimerRef = useRef(null);
-  const surpriseTimerRef = useRef(null);
+  const burstTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const surpriseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setNow(new Date());
@@ -392,7 +393,7 @@ export default function YuxinBirthdayCelebration() {
     };
   }, []);
 
-  const triggerBurst = useCallback((duration = 1500) => {
+  const triggerBurst = useCallback((duration: number = 1500) => {
     if (burstTimerRef.current) clearTimeout(burstTimerRef.current);
     setBurst(false);
     requestAnimationFrame(() => {
